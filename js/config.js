@@ -13,7 +13,6 @@ export const GAME = Object.freeze({
   dangerLimit: 1.55,
   dropCooldown: 0.38,
   comboWindow: 1.85,
-  maxDropLevel: 4,
   scoreKey: "mochi-moon-best",
   soundKey: "mochi-moon-sound",
 });
@@ -146,4 +145,3 @@ export const RANKS = Object.freeze([
 ]);
 
 export const MAX_LEVEL = MOCHI_TYPES.length - 1;
-export const TOP_TIER = MOCHI_TYPES[MAX_LEVEL];

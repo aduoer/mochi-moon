@@ -37,6 +37,7 @@ export const formatNumber = (value) => Math.round(value).toLocaleString("zh-CN")
 export const readNumber = (key, fallback = 0) => {
   try {
     const raw = window.localStorage.getItem(key);
+    if (raw === null) return fallback;
     const value = Number(raw);
     return Number.isFinite(value) ? value : fallback;
   } catch {
