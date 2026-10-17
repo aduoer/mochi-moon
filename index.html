@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+  <meta name="theme-color" content="#131027" />
+  <meta name="description" content="月兔团子铺 —— 一个月夜主题的物理掉落合成小游戏。把糯米团合成到满月团吧！" />
+  <meta property="og:title" content="月兔团子铺 · Mochi Moon" />
+  <meta property="og:description" content="接住月光，把小小的糯米团，滚成一轮满月。" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://aduoer.github.io/mochi-moon/" />
+  <meta property="og:image" content="https://aduoer.github.io/mochi-moon/docs/preview.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <title>月兔团子铺 · Mochi Moon</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/overlays.css" />
+</head>
+<body>
+  <main class="app" id="app">
+    <canvas id="scene" role="img" aria-label="月夜下的团子合成游戏画面"></canvas>
+
+    <header class="hud" id="hud" aria-hidden="true" inert>
+      <div class="score-card">
+        <span class="hud-label">本局得分</span>
+        <strong id="scoreValue">0</strong>
+        <span class="best-inline">最高 <b id="bestValue">0</b></span>
+      </div>
+
+      <div class="brand-mark" aria-hidden="true">
+        <span>月兔团子铺</span>
+        <small>MOCHI MOON</small>
+      </div>
+
+      <div class="hud-tools">
+        <div class="next-card" id="nextCard" aria-label="下一颗团子">
+          <span class="next-label">NEXT</span>
+          <canvas id="nextMochi" width="160" height="160"></canvas>
+        </div>
+        <button class="icon-btn js-sound" type="button" aria-label="关闭声音" aria-pressed="true">
+          <svg class="icon-on" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4.5 9.3h3L12 5.5v13l-4.5-3.8h-3z" fill="currentColor" />
+            <path d="M15.2 8.4c1.9 1.9 1.9 5.3 0 7.2M18 5.8c3 3 3 9.4 0 12.4" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>
+          </svg>
+          <svg class="icon-off" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4.5 9.3h3L12 5.5v13l-4.5-3.8h-3z" fill="currentColor" />
+            <path d="m15.3 9.6 4.9 4.9m0-4.9-4.9 4.9" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="combo-tag" id="comboTag">
+      <span class="combo-star" aria-hidden="true">✦</span>
+      <strong id="comboValue">×2</strong>
+      <span>连击</span>
+      <i class="combo-track"><i id="comboBar"></i></i>
+    </div>
+
+    <div class="moment" id="moment" aria-hidden="true">
+      <span>满月当空</span>
+      <small>A PERFECT MOON</small>
+    </div>
+
+    <div class="hint" id="hint">移动瞄准 · 点击投放</div>
+
+    <section class="overlay" id="startOverlay" role="dialog" aria-modal="true" aria-labelledby="gameTitle">
+      <div class="card start-card">
+        <button class="card-sound js-sound" type="button" aria-label="关闭声音" aria-pressed="true">
+          <svg class="icon-on" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4.5 9.3h3L12 5.5v13l-4.5-3.8h-3z" fill="currentColor" />
+            <path d="M15.2 8.4c1.9 1.9 1.9 5.3 0 7.2M18 5.8c3 3 3 9.4 0 12.4" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>
+          </svg>
+          <svg class="icon-off" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4.5 9.3h3L12 5.5v13l-4.5-3.8h-3z" fill="currentColor" />
+            <path d="m15.3 9.6 4.9 4.9m0-4.9-4.9 4.9" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>
+          </svg>
+        </button>
+
+        <div class="eyebrow">A COZY DROP &amp; MERGE GAME</div>
+
+        <div class="logo-lockup">
+          <svg class="bunny-mark" viewBox="0 0 96 96" aria-hidden="true">
+            <defs>
+              <radialGradient id="bunnyHalo">
+                <stop offset="0" stop-color="#f2c86b" stop-opacity=".17" />
+                <stop offset=".68" stop-color="#f2c86b" stop-opacity=".055" />
+                <stop offset="1" stop-color="#f2c86b" stop-opacity="0" />
+              </radialGradient>
+            </defs>
+            <circle cx="44" cy="49" r="44" fill="url(#bunnyHalo)" />
+            <ellipse cx="32" cy="20" rx="8.4" ry="21" transform="rotate(-9 32 20)" fill="#fff3da"/>
+            <ellipse cx="50" cy="17" rx="8.4" ry="21" transform="rotate(9 50 17)" fill="#fff3da"/>
+            <ellipse cx="33" cy="22" rx="3.6" ry="13.2" transform="rotate(-9 33 22)" fill="#efb5b0"/>
+            <ellipse cx="49" cy="20" rx="3.6" ry="13.2" transform="rotate(9 49 20)" fill="#efb5b0"/>
+            <circle cx="42" cy="51" r="25.5" fill="#fff8e8"/>
+            <ellipse cx="42" cy="57" rx="14.5" ry="10.5" fill="#fffdf6"/>
+            <ellipse cx="32" cy="49" rx="2.5" ry="3.3" fill="#4b3731"/>
+            <ellipse cx="52" cy="49" rx="2.5" ry="3.3" fill="#4b3731"/>
+            <circle cx="32.8" cy="47.8" r=".8" fill="#fff"/>
+            <circle cx="52.8" cy="47.8" r=".8" fill="#fff"/>
+            <path d="m42 55 2.2 1.6-2.2 1.5-2.2-1.5z" fill="#d98681"/>
+            <path d="M42 58c0 1.6-1.8 2.4-3.2 1.8M42 58c0 1.6 1.8 2.4 3.2 1.8" fill="none" stroke="#8a6456" stroke-width="1.4" stroke-linecap="round"/>
+            <circle cx="28" cy="57" r="3.3" fill="#efadac" opacity=".55"/>
+            <circle cx="56" cy="57" r="3.3" fill="#efadac" opacity=".55"/>
+            <path d="M69 24a2.2 2.2 0 1 0 0 4.4 2.2 2.2 0 0 0 0-4.4Zm-49 39a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3Z" fill="#ffe6a8"/>
+          </svg>
+          <h1 id="gameTitle">月兔团子铺</h1>
+          <p class="latin-title">MOCHI MOON</p>
+        </div>
+
+        <p class="lead">接住月光，把小小的糯米团，<br class="mobile-break" />滚成一轮满月。</p>
+
+        <ol class="steps">
+          <li>
+            <span class="step-number">01</span>
+            <div><b>左右移动</b><small>鼠标、手指或 A / D 键瞄准位置</small></div>
+          </li>
+          <li>
+            <span class="step-number">02</span>
+            <div><b>轻轻一放</b><small>两颗相同的团子碰到一起，就会进化；连锁合成还有加成</small></div>
+          </li>
+          <li>
+            <span class="step-number">03</span>
+            <div><b>守住月线</b><small>团子堆越过月光虚线太久，就只好打烊</small></div>
+          </li>
+        </ol>
+
+        <div class="chain" aria-label="团子进化顺序：糯米团、樱花团、抹茶团、桂花团，一直到满月团">
+          <i style="--dot:#fff8ea"></i>
+          <i style="--dot:#ffdce2"></i>
+          <i style="--dot:#d6e9c1"></i>
+          <i style="--dot:#ffe5a8"></i>
+          <i style="--dot:#e9aba1"></i>
+          <span>···</span>
+          <i class="chain-moon" style="--dot:#ffe195"></i>
+          <small>从糯米团到满月团</small>
+        </div>
+
+        <button class="primary-btn" id="startBtn" type="button">
+          <span>开始做团子</span>
+          <span class="btn-arrow" aria-hidden="true">→</span>
+        </button>
+        <p class="best-line">今晚最高纪录 <strong id="menuBest">0</strong> 分</p>
+      </div>
+    </section>
+
+    <section class="overlay is-hidden" id="overOverlay" role="dialog" aria-modal="true" aria-labelledby="overTitle" aria-hidden="true">
+      <div class="card result-card">
+        <div class="eyebrow">THE MOON IS FULL</div>
+        <h2 id="overTitle">今晚打烊啦</h2>
+        <p class="lead" id="rankLine">第一笼团子，暖乎乎地出锅啦。</p>
+
+        <div class="final-score">
+          <span>本局得分</span>
+          <strong id="finalScore">0</strong>
+        </div>
+
+        <div class="result-grid">
+          <div><span>最高合成</span><strong id="finalTier">糯米团</strong></div>
+          <div><span>最高连击</span><strong id="finalCombo">0</strong></div>
+          <div><span>今晚最佳</span><strong id="finalBest">0</strong></div>
+        </div>
+
+        <p class="new-best is-hidden" id="newBest">✦ 新纪录 ✦</p>
+
+        <button class="primary-btn" id="replayBtn" type="button">
+          <span>再来一碗</span>
+          <span class="btn-arrow" aria-hidden="true">→</span>
+        </button>
+      </div>
+    </section>
+
+    <div class="flash" id="flash" aria-hidden="true"></div>
+    <p class="sr-only" id="liveRegion" aria-live="polite"></p>
+  </main>
+
+  <noscript>
+    <p class="noscript">请开启 JavaScript，月兔才能开始做团子。</p>
+  </noscript>
+
+  <script src="vendor/matter.min.js"></script>
+  <script type="module" src="js/game.js"></script>
+</body>
+</html>
