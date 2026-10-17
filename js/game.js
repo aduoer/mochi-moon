@@ -161,7 +161,8 @@ function startGame() {
   state.comboTimer = 0;
   state.maxCombo = 0;
   state.highestLevel = 0;
-  state.dropCooldown = 0;
+  // Ignore stray clicks from the overlay button for one cooldown after starting.
+  state.dropCooldown = GAME.dropCooldown;
   state.dangerTimer = 0;
   state.shake = 0;
   state.hintTimer = 5;

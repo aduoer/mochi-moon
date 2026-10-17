@@ -80,7 +80,8 @@ export class SoundKit {
     if (!this.ready) return;
     try {
       if (!this.noiseBuffer) {
-        const length = Math.floor(this.ctx.sampleRate * 0.4);
+        // Long enough for the longest request (supernova is 0.9s).
+        const length = Math.floor(this.ctx.sampleRate);
         this.noiseBuffer = this.ctx.createBuffer(1, length, this.ctx.sampleRate);
         const data = this.noiseBuffer.getChannelData(0);
         for (let i = 0; i < length; i += 1) data[i] = Math.random() * 2 - 1;

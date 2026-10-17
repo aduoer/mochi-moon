@@ -71,6 +71,7 @@ export class Stage {
     ctx.scale(this.scale, this.scale);
 
     this.drawBackdrop();
+    this.drawBasketShadow();
     this.drawBasketBack();
     this.drawDangerZone(time, view.mode, view.dangerTimer);
     this.drawBodies(view.bodies, time);
@@ -128,6 +129,25 @@ export class Stage {
     ctx.quadraticCurveTo(B.right, B.bottomY, B.right, B.bottomY - r);
     ctx.lineTo(B.right, B.rimY);
     ctx.closePath();
+  }
+
+  drawBasketShadow() {
+    const { ctx } = this;
+    ctx.save();
+    ctx.shadowColor = "rgba(0, 0, 0, 0.38)";
+    ctx.shadowBlur = 20;
+    ctx.shadowOffsetY = 12;
+    roundRectPath(
+      ctx,
+      B.left - B.wall - 4,
+      B.rimY - 8,
+      B.right - B.left + (B.wall + 4) * 2,
+      B.bottomY - B.rimY + B.wall + 34,
+      18,
+    );
+    ctx.fillStyle = "rgba(43, 24, 22, 0.35)";
+    ctx.fill();
+    ctx.restore();
   }
 
   drawBasketBack() {
@@ -262,22 +282,6 @@ export class Stage {
 
   drawBasketFront() {
     const { ctx } = this;
-    ctx.save();
-    ctx.shadowColor = "rgba(0, 0, 0, 0.38)";
-    ctx.shadowBlur = 20;
-    ctx.shadowOffsetY = 12;
-    roundRectPath(
-      ctx,
-      B.left - B.wall - 4,
-      B.rimY - 8,
-      B.right - B.left + (B.wall + 4) * 2,
-      B.bottomY - B.rimY + B.wall + 34,
-      18,
-    );
-    ctx.fillStyle = "rgba(43, 24, 22, 0.35)";
-    ctx.fill();
-    ctx.restore();
-
     this.drawBambooWall(B.left - B.wall, B.wall, true);
     this.drawBambooWall(B.right, B.wall, false);
 

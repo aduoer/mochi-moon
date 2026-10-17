@@ -178,7 +178,7 @@ function drawTinyFlower(ctx, x, y, radius, petal, center) {
   ctx.restore();
 }
 
-function drawToppings(ctx, spec, level, radius, time) {
+function drawSurfaceToppings(ctx, spec, level, radius, time) {
   if (level === 1) {
     drawSakura(ctx, radius * 0.28, -radius * 0.68, radius * 0.3, Math.sin(time * 0.7) * 0.15);
   } else if (level === 2) {
@@ -240,8 +240,6 @@ function drawToppings(ctx, spec, level, radius, time) {
       ctx.fill();
       ctx.restore();
     }
-  } else if (level === 6) {
-    drawRabbitEars(ctx, radius);
   } else if (level === 7) {
     drawGoldenHalo(ctx, radius, time);
     drawSakura(ctx, -radius * 0.5, -radius * 0.56, radius * 0.14, -0.3);
@@ -353,8 +351,9 @@ export function drawMochi(ctx, level, x, y, radius, angle, time, options = {}) {
     ctx.restore();
   }
 
-  drawToppings(ctx, spec, level, radius, time);
+  if (level === 6) drawRabbitEars(ctx, radius);
   drawBody(ctx, spec, radius);
+  drawSurfaceToppings(ctx, spec, level, radius, time);
   drawFace(ctx, spec, radius, level);
 
   if (options.sparkle && level >= 7) {

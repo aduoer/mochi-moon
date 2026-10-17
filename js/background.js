@@ -219,7 +219,9 @@ export class NightSky {
 
   drawClouds(ctx) {
     for (const cloud of this.clouds) {
-      const x = (cloud.x + this.time * cloud.speed) % (this.w + cloud.width) - cloud.width / 2;
+      const span = this.w + cloud.width;
+      const drift = cloud.x + this.time * cloud.speed;
+      const x = ((drift % span) + span) % span - cloud.width / 2;
       ctx.save();
       ctx.globalAlpha = cloud.alpha;
       ctx.fillStyle = "#f6e8ff";
